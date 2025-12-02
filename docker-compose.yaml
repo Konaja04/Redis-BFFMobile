@@ -1,0 +1,69 @@
+services:
+  products-service:
+    build: ./products-service
+    container_name: products-service
+    ports:
+      - "8001:8000"
+    volumes:
+      - ./products-service:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - bff-network
+
+  # bff-web:
+  #   build: ./bff-web
+  #   container_name: bff-web
+  #   ports:
+  #     - "8000:8000"
+  #   volumes:
+  #     - ./bff-web:/app
+  #   environment:
+  #     - PYTHONUNBUFFERED=1
+  #     - PRODUCTS_SERVICE_URL=http://products-service:8000
+  #   depends_on:
+  #     - products-service
+  #   networks:
+  #     - bff-network
+
+  # 2. NUEVO: Servicio de Redis (Cache)
+  redis:
+    image: redis:7-alpine # Imagen ligera recomendada
+    container_name: redis
+    # EXPOSE es preferible a PORTS si no necesitas acceder desde el host
+    expose: 
+      - "6379" 
+    networks:
+      - bff-network
+
+  bff-mobile:
+    build: ./bff-mobile
+    container_name: bff-mobile
+    ports:
+      - "8002:8000"
+    volumes:
+      - ./bff-mobile:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PRODUCTS_SERVICE_URL=http://products-service:8000
+    depends_on:
+      - products-service
+      - redis # AHORA depende de Redis
+    networks:
+      - bff-network
+
+  # web-frontend:
+  #   build: ./web-frontend
+  #   container_name: web-frontend
+  #   ports:
+  #     - "3000:80"
+  #   depends_on:
+  #     - bff-web
+  #   networks:
+  #     - bff-network
+  #   environment:
+  #     - VITE_API_URL=http://localhost:8000
+
+networks:
+  bff-network:
+    driver: bridge
