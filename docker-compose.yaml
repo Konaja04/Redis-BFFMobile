@@ -48,7 +48,7 @@ services:
       - PRODUCTS_SERVICE_URL=http://products-service:8000
     depends_on:
       - products-service
-      - redis # AHORA depende de Redis
+      # - redis # AHORA depende de Redis
     networks:
       - bff-network
 
