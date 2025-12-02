@@ -27,14 +27,14 @@ services:
   #     - bff-network
 
   # 2. NUEVO: Servicio de Redis (Cache)
-  redis:
-    image: redis:7-alpine # Imagen ligera recomendada
-    container_name: redis
-    # EXPOSE es preferible a PORTS si no necesitas acceder desde el host
-    expose: 
-      - "6379" 
-    networks:
-      - bff-network
+  # redis:
+  #   image: redis:7-alpine # Imagen ligera recomendada
+  #   container_name: redis
+  #   # EXPOSE es preferible a PORTS si no necesitas acceder desde el host
+  #   expose: 
+  #     - "6379" 
+  #   networks:
+  #     - bff-network
 
   bff-mobile:
     build: ./bff-mobile
