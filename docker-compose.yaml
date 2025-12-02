@@ -2,8 +2,7 @@ services:
   products-service:
     build: ./products-service
     container_name: products-service
-    ports:
-      - "8001:8000"
+    # PUERTO ELIMINADO: Railway expone el 8000 interno por proxy.
     volumes:
       - ./products-service:/app
     environment:
@@ -11,11 +10,10 @@ services:
     networks:
       - bff-network
 
-  # bff-web:
+  # bff-web (Comentado):
   #   build: ./bff-web
   #   container_name: bff-web
-  #   ports:
-  #     - "8000:8000"
+  #   # PUERTO ELIMINADO
   #   volumes:
   #     - ./bff-web:/app
   #   environment:
@@ -26,21 +24,13 @@ services:
   #   networks:
   #     - bff-network
 
-  # 2. NUEVO: Servicio de Redis (Cache)
-  redis:
-    image: redis:7-alpine # Imagen ligera recomendada
-    container_name: redis
-    # EXPOSE es preferible a PORTS si no necesitas acceder desde el host
-    expose: 
-      - "6379" 
-    networks:
-      - bff-network
+  # SERVICIO REDIS ELIMINADO: Usar el Plugin de Redis de Railway.
+  # El Plugin inyecta REDIS_URL para que bff-mobile pueda conectarse.
 
   bff-mobile:
     build: ./bff-mobile
     container_name: bff-mobile
-    ports:
-      - "8002:8000"
+    # PUERTO ELIMINADO: Railway expone el 8000 interno por proxy.
     volumes:
       - ./bff-mobile:/app
     environment:
@@ -48,11 +38,13 @@ services:
       - PRODUCTS_SERVICE_URL=http://products-service:8000
     depends_on:
       - products-service
-      - redis # AHORA depende de Redis
+      # ELIMINAR 'redis' de depends_on. 
+      # El Plugin de Railway no necesita esta dependencia explícita.
+      # - redis 
     networks:
       - bff-network
 
-  # web-frontend:
+  # web-frontend (Comentado):
   #   build: ./web-frontend
   #   container_name: web-frontend
   #   ports:
