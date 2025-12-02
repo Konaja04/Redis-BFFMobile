@@ -1,0 +1,8 @@
+
+# Dockerfile (en la raíz)
+# Simplemente usa Python como un 'Placeholder'
+FROM python:3.10-slim
+
+# Este Dockerfile no se usará, pero a veces le da a Railway
+# la pista para que abandone Railpack y use Docker.
+CMD echo "Running Docker Compose Services"
